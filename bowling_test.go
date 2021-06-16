@@ -23,8 +23,28 @@ func TestShouldCalculateThePointsInAFrame(t *testing.T) {
 	scorer.AddThrow(numberOfPinsDownInFirstThrow)
 	scorer.AddThrow(numberOfPinsDownInSecondThrow)
 
-	if scorer.Frames[0] != expectedScoreInFirstFrame {
-		t.Errorf("The score of the first frame should be %v, but actually is %v", expectedScoreInFirstFrame, scorer.Frames[0])
+	scoreOfFrame := scorer.GetFrameScore(0)
+	if scoreOfFrame != expectedScoreInFirstFrame {
+		t.Errorf("The score of the first frame should be %v, but actually is %v", expectedScoreInFirstFrame, scoreOfFrame)
+	}
+}
+
+func TestShouldCalculateThePointsInASecondFrameWithourAMark(t *testing.T) {
+	numberOfPinsDownInFirstThrow := 1
+	numberOfPinsDownInSecondThrow := 4
+	numberOfPinsDownInThirdThrow := 4
+	numberOfPinsDownInFourthThrow := 5
+	expectedScoreInSecondFrame := 14
+	scorer := &Scorer{}
+
+	scorer.AddThrow(numberOfPinsDownInFirstThrow)
+	scorer.AddThrow(numberOfPinsDownInSecondThrow)
+	scorer.AddThrow(numberOfPinsDownInThirdThrow)
+	scorer.AddThrow(numberOfPinsDownInFourthThrow)
+
+	scoreOfFrame := scorer.GetFrameScore(1)
+	if scoreOfFrame != expectedScoreInSecondFrame {
+		t.Errorf("The score of the second frame should be %v, but actually is %v", expectedScoreInSecondFrame, scoreOfFrame)
 	}
 }
 

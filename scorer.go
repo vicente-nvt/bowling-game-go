@@ -18,7 +18,7 @@ func (s *Scorer) AddThrow(numberOfPinsDown int) {
 
 		scoreOfCurrentFrame, _ := currentFrame.GetFrameScore()
 		s.startNewFrame(numberOfPinsDown, scoreOfCurrentFrame)
-		(*currentFrame).AddFirstThrowAfterFrame(numberOfPinsDown)
+		(*currentFrame).AddTheFirstThrowOfNextFrame(numberOfPinsDown)
 
 		return
 	}

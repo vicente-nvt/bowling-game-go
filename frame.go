@@ -2,6 +2,8 @@ package main
 
 import "errors"
 
+const numberOfPinsDownForASpare = 10
+
 type Frame struct {
 	priorFrameScore         int
 	throws                  []int
@@ -17,8 +19,14 @@ func (f *Frame) AddFirstThrow(numberOfPinsDown int) {
 	f.addThrow(numberOfPinsDown)
 }
 
-func (f *Frame) AddSecondThrow(numberOfPinsDown int) {
+func (f *Frame) AddSecondThrow(numberOfPinsDown int) error {
+
+	if !f.HasFirstThrow() {
+		return errors.New("it isn't possible to add second throw before first throw")
+	}
+
 	f.addThrow(numberOfPinsDown)
+	return nil
 }
 
 func (f *Frame) HasFirstThrow() bool {
@@ -34,7 +42,7 @@ func (f *Frame) IsSpare() bool {
 		return false
 	}
 
-	return (f.throws[0] + f.throws[1]) == 10
+	return (f.throws[0] + f.throws[1]) == numberOfPinsDownForASpare
 }
 
 func (f *Frame) GetFrameScore() (int, error) {
@@ -50,7 +58,7 @@ func (f *Frame) AddPriorFrameScore(priorFrameScore int) {
 	f.priorFrameScore = priorFrameScore
 }
 
-func (f *Frame) AddFirstThrowAfterFrame(firstThrowAfterSpare int) {
+func (f *Frame) AddTheFirstThrowOfNextFrame(firstThrowAfterSpare int) {
 	f.firstThrowAfterSpare = firstThrowAfterSpare
 	f.hasFirstThrowAfterFrame = true
 }

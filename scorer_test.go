@@ -88,3 +88,72 @@ func TestShouldCalculateThePointsOfASpareFrameAfterNextThrow(t *testing.T) {
 		t.Errorf("The expected score was: '%v', but obtained was: '%v'", expectedScore, obtainedScore)
 	}
 }
+
+func TestShouldCalculateThePointsOfASpareFrameAfterAStrike(t *testing.T) {
+	expectedScore := 49
+	scorer := &Scorer{}
+
+	scorer.AddThrow(1)
+	scorer.AddThrow(4)
+	scorer.AddThrow(4)
+	scorer.AddThrow(5)
+	scorer.AddThrow(6)
+	scorer.AddThrow(4)
+	scorer.AddThrow(5)
+	scorer.AddThrow(5)
+	scorer.AddThrow(10)
+
+	obtainedScore, err := scorer.GetFrameScore(3)
+	if err != nil {
+		t.Errorf("There was an unexpected error: '%v'", err)
+	}
+	if expectedScore != obtainedScore {
+		t.Errorf("The expected score was: '%v', but obtained was: '%v'", expectedScore, obtainedScore)
+	}
+}
+
+func TestShouldNotCalculateThePointsOfAStrikeWithoutNexFrameThrows(t *testing.T) {
+	expectedMessage := "it isn't possible to calculate a strike frame without the throws of next frame"
+	scorer := &Scorer{}
+
+	scorer.AddThrow(1)
+	scorer.AddThrow(4)
+	scorer.AddThrow(4)
+	scorer.AddThrow(5)
+	scorer.AddThrow(6)
+	scorer.AddThrow(4)
+	scorer.AddThrow(5)
+	scorer.AddThrow(5)
+	scorer.AddThrow(10)
+	scorer.AddThrow(0)
+
+	_, err := scorer.GetFrameScore(4)
+	if err == nil || (err != nil && err.Error() != expectedMessage) {
+		t.Errorf("There was expected an error with the following message:'%v', but it wasn't thrown", expectedMessage)
+	}
+}
+
+func TestShouldCalculateThePointsOfAStrikeFrameAfterNextThrow(t *testing.T) {
+	expectedScore := 60
+	scorer := &Scorer{}
+
+	scorer.AddThrow(1)
+	scorer.AddThrow(4)
+	scorer.AddThrow(4)
+	scorer.AddThrow(5)
+	scorer.AddThrow(6)
+	scorer.AddThrow(4)
+	scorer.AddThrow(5)
+	scorer.AddThrow(5)
+	scorer.AddThrow(10)
+	scorer.AddThrow(0)
+	scorer.AddThrow(1)
+
+	obtainedScore, err := scorer.GetFrameScore(4)
+	if err != nil {
+		t.Errorf("There was an unexpected error: '%v'", err)
+	}
+	if expectedScore != obtainedScore {
+		t.Errorf("The expected score was: '%v', but obtained was: '%v'", expectedScore, obtainedScore)
+	}
+}

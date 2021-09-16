@@ -10,15 +10,23 @@ func (s *Scorer) AddThrow(numberOfPinsDown int) {
 
 	if len(s.frames) > 0 {
 		currentFrame := s.frames[len(s.frames)-1]
+		shouldSetSecondThrow := !currentFrame.HasSecondThrow() && !currentFrame.IsStrike()
 
-		if !currentFrame.HasSecondThrow() {
+		if shouldSetSecondThrow {
 			(*currentFrame).AddSecondThrow(numberOfPinsDown)
+
+			hasPriorFrame := len(s.frames)-2 >= 0
+
+			if hasPriorFrame {
+				priorFrame := s.frames[len(s.frames)-2]
+				priorFrame.AddTheSecondThrowOfNextFrame(numberOfPinsDown)
+			}
 			return
 		}
 
+		(*currentFrame).AddTheFirstThrowOfNextFrame(numberOfPinsDown)
 		scoreOfCurrentFrame, _ := currentFrame.GetFrameScore()
 		s.startNewFrame(numberOfPinsDown, scoreOfCurrentFrame)
-		(*currentFrame).AddTheFirstThrowOfNextFrame(numberOfPinsDown)
 
 		return
 	}
